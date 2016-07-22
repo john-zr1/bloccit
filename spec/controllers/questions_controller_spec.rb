@@ -43,7 +43,8 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe "GEt new" do
     it "returnshttp success" do
-      get :newexpect(response).to have_http_status(:success)
+      get :new
+      expect(response).to have_http_status(:success)
     end
 
     it "renders the #new view" do
@@ -54,6 +55,24 @@ RSpec.describe QuestionsController, type: :controller do
     it "instantiates @questions" do
       get :new
       expect(assigns(:question)).not_to be_nil
+    end
+  end
+
+  descrie "POST create" do
+    it "increases the number of Questions by 1" do
+      expect{ post
+        :create {queston: {title: "Title", body: "Body", resolved: false}}
+      }.to change(Question,:count).by(1)
+    end
+
+    it "assigns the new question to @questions" do
+      post :create, {question: my_question.attributes}
+      expect(assigns(questions)).to eq Questions.last
+    end
+
+    it "redirects to the new question" do
+      post :create, {questions: my_question.attributes}
+      expect(response).to redirect_to Questions.last
     end
   end
 end
