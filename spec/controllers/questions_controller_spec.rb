@@ -5,10 +5,10 @@ RSpec.describe QuestionsController, type: :controller do
 
   let (:my_question) do
     Question.create(
-    id: 1,
-    title: RandomData.random_sentence,
-    body: RandomData.random_paragraph,
-    resolved: false
+      id: 1,
+      title: RandomData.random_sentence,
+      body: RandomData.random_paragraph,
+      resolved: false
     )
   end
 
@@ -58,21 +58,70 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
-  descrie "POST create" do
+  describe "POST create" do
     it "increases the number of Questions by 1" do
-      expect{ post
-        :create {queston: {title: "Title", body: "Body", resolved: false}}
+      expect{
+        post :create, { question: { title: "Title", body: "Body", resolved: false } }
       }.to change(Question,:count).by(1)
     end
 
     it "assigns the new question to @questions" do
       post :create, {question: my_question.attributes}
-      expect(assigns(questions)).to eq Questions.last
+      expect(assigns(:question)).to eq Question.last
     end
 
     it "redirects to the new question" do
-      post :create, {questions: my_question.attributes}
-      expect(response).to redirect_to Questions.last
+      post :create, {question: my_question.attributes}
+      expect(response).to redirect_to Question.last
+    end
+  end
+
+  describe "GET adit" do
+    it "returns http success" do
+      get :edit, {id: my_question.id}
+      expect(response).to have_http_status(:success)
+    end
+
+    it "renders the #edit view" do
+      get :edit, {id: my_question.id}
+      expect(response).to render_template :edit
+    end
+  end
+
+  describe "PUT update" do
+    it "Updates question with expected attributes" do
+      new_title = RandomData.random_sentence
+      new_body = RandomData.random_paragraph
+
+      put :update, id: my_question.id, question: {
+        title: new_title, body: new_body, resolved: false }
+
+      updated_question = assigns(:question)
+      expect(updated_question.id).to eq my_question.id
+      expect(updated_question.title).to eq new_title
+      expect(updated_question.body).to eq new_body
+    end
+
+    it "redirects to the updated question" do
+      new_title = RandomData.random_sentence
+      new_body = RandomData.random_paragraph
+
+      put :update, id: my_question.id, question: {title: new_title, body: new_body,
+      resolved: true }
+      expect(response).to redirect_to my_question
+    end
+  end
+
+  describe "DELETE destroy" do
+    it "deletes the question" do
+      delete :destroy, {id: my_question.id}
+      count = Question.where({id: my_question.id}).size
+      expect(count).to eq 0
+    end
+
+    it "redirects to questions index" do
+      delete :destroy, {id: my_question.id}
+      expect(response).to redirect_to questions_path
     end
   end
 end
