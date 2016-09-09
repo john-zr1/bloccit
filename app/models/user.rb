@@ -1,6 +1,4 @@
 class User < ActiveRecord::Base
-  enum role: [:member, :admin]
-  
   has_many :posts
 
   before_save { self.email = email.downcase if email.present? }
@@ -15,5 +13,6 @@ class User < ActiveRecord::Base
           length: { minimum: 3, maximum: 254 }
 
   has_secure_password
-
+  
+  enum role: [:member, :admin]
 end
