@@ -4,6 +4,8 @@ class TopicsController < ApplicationController
 # #8
   before_action :authorize_user, except: [:index, :show]
 
+  before_action :moderator, except: [:index, :show, :update]
+
   def update
     @topic = Topic.find(params[:id])
     @topic.assign_attributes(topic_params)

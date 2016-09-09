@@ -3,6 +3,8 @@ class PostsController < ApplicationController
 
   before_action :authorize_user, except: [:show, :new, :create]
 
+  before_action :moderator, except: [:index, :show, :create, :update]
+
    def show
 
      @post = Post.find(params[:id])
