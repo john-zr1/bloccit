@@ -68,6 +68,7 @@ class PostsController < ApplicationController
       params.require(:post).permit(:title, :body)
     end
 
+
   def authorize_user
     post = Post.find(params[:id])
 # #11

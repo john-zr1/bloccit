@@ -65,7 +65,6 @@ end
     params.require(:topic).permit(:name, :description, :public)
   end
 
-
   def authorize_user
     unless current_user.admin?
       flash[:alert] = "You must be an admin to do that."
