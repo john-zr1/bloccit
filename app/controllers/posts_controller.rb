@@ -14,7 +14,7 @@ class PostsController < ApplicationController
    end
 
    def create
-# #9
+     @post.labels = Label.update_labels(params[:post][:labels])
      @topic = Topic.find(params[:topic_id])
      @post = @topic.posts.build(post_params)
      @post.user = current_user
@@ -37,6 +37,7 @@ class PostsController < ApplicationController
    end
 
    def update
+     @post.labels = Label.update_labels(params[:post][:labels])
      @post = Post.find(params[:id])
      @post.assign_attributes(post_params)
 
