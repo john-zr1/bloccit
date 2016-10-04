@@ -3,7 +3,7 @@ class PostsController < ApplicationController
 
   before_action :authorize_user, except: [:show, :new, :create]
 
-  before_action :moderator, except: [:index, :show, :create, :update]
+  before_action :authorize_moderator, only: [:destroy]
 
    def show
 
@@ -79,16 +79,11 @@ class PostsController < ApplicationController
     end
   end
 
-  def moderator
-    @post = Post.find(params[:id])
-    @post.assign_attributes(post_params)
-
-    if @post.save
-      flash[:notice] = "Post was updated successfully."
-      redirect_to [@post.topic, @post]
-    else
-      flash.now[:alert] = "There was an error saving the post. Please try again."
-      render :edit
-    end
+  def authorize_moderator
+    post = Post.find(params[:id])
+    if current_user == post.user || current_user.admin?
+      flash[:alert] = "You must be an admin to do that."
+      redirect_to [post.topic, post]  # your code here...
   end
+end
 end

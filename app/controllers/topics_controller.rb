@@ -4,7 +4,7 @@ class TopicsController < ApplicationController
 # #8
   before_action :authorize_user, except: [:index, :show]
 
-  before_action :moderator, except: [:index, :show, :update]
+  before_action :authorize_moderator, only: [:new, :create, :destroy]
 
   def update
     @topic = Topic.find(params[:id])
@@ -69,22 +69,15 @@ end
 
 
   def authorize_user
-    unless current_user.admin?
-      flash[:alert] = "You must be an admin to do that."
+    unless current_user.admin? || current_user.moderator?
+      flash[:alert] = "You must be an admin or moderator to do that."
       redirect_to topics_path
     end
   end
 
-  def moderator
-    @topic = Topic.find(params[:id])
-    @topic.assign_attributes(topic_params)
-
-
-    if @topic.save
-       flash[:notice] = "Topic was updated successfully."
-      redirect_to @topic
-    else
-      flash.now[:alert] = "Error saving topic. Please try again."
-      render :edit
+  def authorize_moderator
+    if current_user.moderator?
+      flash[:alert] = "You must be a moderator to do that."
+      redirect_to topics_path
     end
   end
