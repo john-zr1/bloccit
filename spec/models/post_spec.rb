@@ -6,14 +6,15 @@ RSpec.describe Post, type: :model do
   let(:body) { RandomData.random_paragraph }
   let(:name) { RandomData.random_sentence }
   let(:user) { User.create!(name: "Bloccit User", email: "user@bloccit.com", password: "password") }
-
   let(:description) { RandomData.random_paragraph }
   let(:topic) { Topic.create!(name: name, description: description) }
   let(:post) { topic.posts.create!(title: title, body: body, user: user) }
-# #1
+
+  it { is_expected.to have_many(:labelings) }
+  it { is_expected.to have_many(:labels).through(:labelings) }
 
   it { is_expected.to belong_to(:topic) }
-
+  it { is_expected.to belong_to(:user) }
   it { is_expected.to validate_presence_of(:title) }
   it { is_expected.to validate_presence_of(:body) }
   it { is_expected.to validate_presence_of(:topic) }
