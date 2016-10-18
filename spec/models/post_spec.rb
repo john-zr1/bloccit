@@ -10,6 +10,7 @@ RSpec.describe Post, type: :model do
   let(:topic) { Topic.create!(name: name, description: description) }
   let(:post) { topic.posts.create!(title: title, body: body, user: user) }
 
+  it { is_expected.to have_many(:favorites) }
   it { is_expected.to have_many(:labelings) }
   it { is_expected.to have_many(:labels).through(:labelings) }
   it { is_expected.to belong_to(:topic) }
@@ -55,7 +56,7 @@ RSpec.describe Post, type: :model do
         expect( post.points ).to eq(@up_votes - @down_votes)
       end
     end
-    
+
         describe "#update_rank" do
     # #28
       it "calculates the correct rank" do
