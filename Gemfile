@@ -38,3 +38,5 @@ gem 'turbolinks'
  gem 'bcrypt'
 
  gem 'figaro', '1.0'
+
+ gem 'factory_girl_rails', '~> 4.0'
