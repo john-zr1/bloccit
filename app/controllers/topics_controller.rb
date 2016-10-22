@@ -37,6 +37,11 @@ class TopicsController < ApplicationController
 
   def show
     @topic = Topic.find(params[:id])
+
+    unless @topic.public || current_user
+      flash[:alert] = "You must be signed in to view private topics."
+      redirect_to new_session_path
+    end
   end
 
   def new
@@ -64,12 +69,12 @@ end
   private
 
   def topic_params
-    params.require(:topic).permit(:name, :description, :public)
+  params.require(:topic).permit(:name, :description, :public)
   end
 
   def authorize_user
-    unless current_user.admin?
-      flash[:alert] = "You must be an admin to do that."
-      redirect_to topics_path
-    end
+  unless current_user.admin?
+    flash[:alert] = "You must be an admin to do that."
+    redirect_to topics_path
   end
+end
